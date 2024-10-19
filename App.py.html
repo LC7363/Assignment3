@@ -1,0 +1,76 @@
+<html>
+<head>
+<title>App.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+.s5 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+App.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">flask </span><span class="s0">import </span><span class="s1">Flask</span><span class="s2">, </span><span class="s1">render_template</span>
+<span class="s0">from </span><span class="s1">pymongo </span><span class="s0">import </span><span class="s1">MongoClient</span>
+<span class="s0">from </span><span class="s1">dotenv </span><span class="s0">import </span><span class="s1">load_dotenv</span>
+<span class="s0">import </span><span class="s1">os</span>
+
+<span class="s1">load_dotenv</span><span class="s2">()</span>
+
+<span class="s3"># Creates the application instance</span>
+<span class="s1">app </span><span class="s2">= </span><span class="s1">Flask</span><span class="s2">(</span><span class="s1">__name__</span><span class="s2">)</span>
+
+<span class="s1">db_username </span><span class="s2">= </span><span class="s1">os</span><span class="s2">.</span><span class="s1">environ</span><span class="s2">[</span><span class="s4">&quot;MONGODB_USERNAME&quot;</span><span class="s2">]</span>
+<span class="s1">db_password </span><span class="s2">= </span><span class="s1">os</span><span class="s2">.</span><span class="s1">environ</span><span class="s2">[</span><span class="s4">&quot;MONGODB_PASSWORD&quot;</span><span class="s2">]</span>
+
+<span class="s1">print</span><span class="s2">(</span><span class="s1">db_username</span><span class="s2">)</span>
+<span class="s1">print</span><span class="s2">(</span><span class="s1">db_password</span><span class="s2">)</span>
+
+<span class="s3"># Creates the Mongodb Client</span>
+<span class="s1">mongodb_client </span><span class="s2">= </span><span class="s1">MongoClient</span><span class="s2">(</span><span class="s4">f&quot;mongodb+srv://</span><span class="s0">{</span><span class="s1">db_username</span><span class="s0">}</span><span class="s4">:</span><span class="s0">{</span><span class="s1">db_password</span><span class="s0">}</span><span class="s4">@assignment2.78inc.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=Assignment2&quot;</span><span class="s2">)</span>
+
+<span class="s1">db </span><span class="s2">= </span><span class="s1">mongodb_client</span><span class="s2">.</span><span class="s1">shop_db</span>
+<span class="s1">products_collection </span><span class="s2">= </span><span class="s1">db</span><span class="s2">.</span><span class="s1">products</span>
+
+<span class="s1">products </span><span class="s2">= [</span>
+    <span class="s2">{</span>
+      <span class="s4">&quot;name&quot;</span><span class="s2">: </span><span class="s4">&quot;Laptop&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;tag&quot;</span><span class="s2">: </span><span class="s4">&quot;Electronics&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;price&quot;</span><span class="s2">: </span><span class="s5">899.99</span><span class="s2">,</span>
+      <span class="s4">&quot;image_path&quot;</span><span class="s2">: </span><span class="s4">&quot;images/laptop.jpg&quot;</span>
+    <span class="s2">},</span>
+    <span class="s2">{</span>
+      <span class="s4">&quot;name&quot;</span><span class="s2">: </span><span class="s4">&quot;Coffee Mug&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;tag&quot;</span><span class="s2">: </span><span class="s4">&quot;Kitchenware&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;price&quot;</span><span class="s2">: </span><span class="s5">12.99</span><span class="s2">,</span>
+      <span class="s4">&quot;image_path&quot;</span><span class="s2">: </span><span class="s4">&quot;images/mug.jpg&quot;</span>
+    <span class="s2">},</span>
+    <span class="s2">{</span>
+      <span class="s4">&quot;name&quot;</span><span class="s2">: </span><span class="s4">&quot;Headphones&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;tag&quot;</span><span class="s2">: </span><span class="s4">&quot;Electronics&quot;</span><span class="s2">,</span>
+      <span class="s4">&quot;price&quot;</span><span class="s2">: </span><span class="s5">199.99</span><span class="s2">,</span>
+      <span class="s4">&quot;image_path&quot;</span><span class="s2">: </span><span class="s4">&quot;images/headphones.jpg&quot;</span>
+    <span class="s2">}</span>
+<span class="s2">]</span>
+<span class="s3"># products_collection.insert_many(products)</span>
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s4">&quot;/&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">index</span><span class="s2">():</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s4">&quot;index.html&quot;</span><span class="s2">)</span>
+
+
+<span class="s2">@</span><span class="s1">app</span><span class="s2">.</span><span class="s1">route</span><span class="s2">(</span><span class="s4">&quot;/products&quot;</span><span class="s2">)</span>
+<span class="s0">def </span><span class="s1">products</span><span class="s2">():</span>
+    <span class="s1">products </span><span class="s2">= </span><span class="s1">list</span><span class="s2">(</span><span class="s1">products_collection</span><span class="s2">.</span><span class="s1">find</span><span class="s2">())</span>
+    <span class="s0">return </span><span class="s1">render_template</span><span class="s2">(</span><span class="s4">&quot;product.html&quot;</span><span class="s2">, </span><span class="s1">products</span><span class="s2">=</span><span class="s1">products</span><span class="s2">)</span>
+
+<span class="s1">app</span><span class="s2">.</span><span class="s1">run</span><span class="s2">(</span><span class="s1">host</span><span class="s2">=</span><span class="s4">&quot;0.0.0.0&quot;</span><span class="s2">, </span><span class="s1">port</span><span class="s2">=</span><span class="s5">5000</span><span class="s2">)</span></pre>
+</body>
+</html>
